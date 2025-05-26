@@ -1,4 +1,6 @@
-﻿using AspNetCore_CrashCourse.Models;
+﻿using AspNetCore_CrashCourse.Entities;
+using AspNetCore_CrashCourse.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,17 +8,14 @@ namespace AspNetCore_CrashCourse.Controllers
 {
     public class AuthController : Controller
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly ILogger _logger;
-        
-        public AuthController(ILogger logger,
-            SignInManager<IdentityUser> signInManager,
-            UserManager<IdentityUser> userManager)
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        public AuthController(SignInManager<ApplicationUser> signInManager,
+            UserManager<ApplicationUser> userManager)
         {
             _signInManager = signInManager;
             _userManager = userManager;
-            _logger = logger;
         }
 
         [HttpGet]
@@ -30,7 +29,7 @@ namespace AspNetCore_CrashCourse.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new IdentityUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, Name = model.Name, LastName = model.LastName };
                 var result = await _userManager.CreateAsync(user, model.Password);
 
                 if (result.Succeeded)
@@ -78,6 +77,7 @@ namespace AspNetCore_CrashCourse.Controllers
             return View(model);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Logout()
         {

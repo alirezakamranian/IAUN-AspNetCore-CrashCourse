@@ -10,6 +10,14 @@ namespace AspNetCore_CrashCourse.Models
         public string Email { get; set; }
 
         [Required]
+        [Display(Name = "نام")]
+        public string Name { get; set; }
+
+        [Required]
+        [Display(Name = "نام خانوادگی")]
+        public string LastName { get; set; }
+
+        [Required]
         [StringLength(100, ErrorMessage = "رمز عبور باید حداقل 6 کاراکتر باشد", MinimumLength = 6)]
         [DataType(DataType.Password)]
         [Display(Name = "رمز عبور")]
